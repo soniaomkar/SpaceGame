@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title> Killed my Space </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="world"> <!--adding the background-->
+    <div id="hero"></div> <!--adding the hero-->
+    <div id="missiles"></div> <!--adding missiles for shooting-->
+    <div id="enemies"></div> <!--adding enemies for shooting-->
+  </div>
+
+  <script>
+    //javascript coding added
+
+    //adding object and properties
+    var hero = {
+      top: 700,
+      left: 575
+    };
+
+    //adding array with multiple objects
+    //first position in array is always 0
+    var missiles = [];
+
+    var enemies = [
+      { left: 200, top:100 },
+      { left: 300, top:100 },
+      { left: 400, top:100 },
+      { left: 500, top:100 },
+      { left: 600, top:100 },
+      { left: 700, top:100 },
+      { left: 800, top:100 },
+      { left: 900, top:100 },
+      { left: 200, top:175 },
+      { left: 300, top:175 },
+      { left: 400, top:175 },
+      { left: 500, top:175 },
+      { left: 600, top:175 },
+      { left: 700, top:175 },
+      { left: 800, top:175 },
+      { left: 900, top:175 }
+    ];
+
+    //add object document where on pressing any keyboard button a function e is carried out
+    //to log something on the screen we use console
+    //it logs in the console tab under the inspect window
+    //only run if statements are true
+
+    document.onkeydown = function(e) {
+      console.log(e.keyCode);
+      //to identify the value of the keyCode
+      //left keycode value is 37
+        if(e.keyCode === 37) {
+            console.log("LEFT");
+            hero.left = hero.left - 10;
+            moveHero();
+        }
+        else if(e.keyCode === 39) {
+            console.log("RIGHT");
+            hero.left = hero.left + 10;
+            moveHero();
+        }
+        else if(e.keyCode === 32) {
+            console.log("FIRE");
+            missiles.push({
+              left: hero.left + 15,
+              top: hero.top
+            })
+            shootMissiles();
+        }
+    }
+
+    //adding directions
+    //adding px as string as the unit measurement as per .css
+    function moveHero() {
+      document.getElementById('hero').style.left = hero.left + "px";
+    }
+
+    //adding movement to missiles
+    function shootMissiles() {
+      //alert('shootMissiles invoked'); troubleshooting, if function ran
+      document.getElementById('missiles').innerHTML= "";
+
+      //adding loops to shoot missiles one after the other
+      //or missile++ is also missile = missile + 1
+      for (var missile = 0; missile < missiles.length; missile++){
+        document.getElementById('missiles').innerHTML += `<div class='missile' style='left:${missiles[missile].left} px;
+         top:${missiles[missile].top}px;'></div>`;
+
+         //instead of adding fixed values we add a variable for javascript to follow
+      }
+    }
+
+    function moveMissiles() {
+      for (var missile = 0; missile < missiles.length; missile++){
+        missiles[missile].top = missiles[missile].top - 5;
+      }
+    }
+
+    function drawEnemies() {
+      document.getElementById('enemies').innerHTML= "";
+      for (var enemy = 0; enemy < enemies.length; enemy++){
+
+        document.getElementById('enemies').innerHTML += `<div class='enemy' style='left:${enemies[enemy].left} px; top:${enemies[enemy].top}px;'></div>`
+       }
+    }
+
+    function moveEnemies() {
+      for (var enemy = 0; enemy < enemies.length; enemy++){
+        enemies[enemy].top = enemies[enemy].top + 5;
+      }
+    }
+
+    function gameLoop() {
+        setTimeout(gameLoop , 100)
+        moveMissiles(); //move missiles every 1 second (1000)
+        shootMissiles();
+        drawEnemies();
+    }
+    gameLoop();
+
+  </script>
+
+</body>
+</html>
