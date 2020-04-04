@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title> Killed my Space </title>
-  <link rel="stylesheet" href="style.css">
+    <title> Killed my Space </title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div id="world"> <!--adding the background-->
-    <div id="hero"></div> <!--adding the hero-->
-    <div id="missiles"></div> <!--adding missiles for shooting-->
-    <div id="enemies"></div> <!--adding enemies for shooting-->
-  </div>
+    <div id="world"> <!--adding the background-->
+      <div id="hero"></div> <!--adding the hero-->
+      <div id="missiles"></div> <!--adding missiles for shooting-->
+      <div id="enemies"></div> <!--adding enemies for shooting-->
+    </div>
 
   <script>
     //javascript coding added
@@ -50,25 +50,25 @@
     //only run if statements are true
 
     document.onkeydown = function(e) {
-      console.log(e.keyCode);
+      //console.log(e.keyCode);
       //to identify the value of the keyCode
       //left keycode value is 37
         if(e.keyCode === 37) {
-            console.log("LEFT");
+            //console.log("LEFT");
             hero.left = hero.left - 10;
             moveHero();
         }
         else if(e.keyCode === 39) {
-            console.log("RIGHT");
+            //console.log("RIGHT");
             hero.left = hero.left + 10;
             moveHero();
         }
         else if(e.keyCode === 32) {
-            console.log("FIRE");
+            //console.log("FIRE");
             missiles.push({
-              left: hero.left + 15,
-              top: hero.top
-            })
+              left: hero.left + 20,
+              top: hero.top - 20
+            });
             shootMissiles();
         }
     }
@@ -76,7 +76,8 @@
     //adding directions
     //adding px as string as the unit measurement as per .css
     function moveHero() {
-      document.getElementById('hero').style.left = hero.left + "px";
+      document.getElementById('hero').style.left = hero.left + 'px';
+      document.getElementById('hero').style.top = hero.top + 'px';
     }
 
     //adding movement to missiles
@@ -87,9 +88,9 @@
       //adding loops to shoot missiles one after the other
       //or missile++ is also missile = missile + 1
       for (var missile = 0; missile < missiles.length; missile++){
-        document.getElementById('missiles').innerHTML += `<div class='missile' style='left:${missiles[missile].left} px;
-         top:${missiles[missile].top}px;'></div>`;
-
+        document.getElementById('missiles').innerHTML += `<div class=
+        'missile' style='left:${missiles[missile].left}px;
+         top:${missiles[missile].top}px'></div>`;
          //instead of adding fixed values we add a variable for javascript to follow
       }
     }
@@ -101,16 +102,37 @@
     }
 
     function drawEnemies() {
-      document.getElementById('enemies').innerHTML= "";
+      document.getElementById('enemies').innerHTML = ""
       for (var enemy = 0; enemy < enemies.length; enemy++){
-
-        document.getElementById('enemies').innerHTML += `<div class='enemy' style='left:${enemies[enemy].left} px; top:${enemies[enemy].top}px;'></div>`
+        document.getElementById('enemies').innerHTML +=
+        `<div class='enemy' style='left:${enemies[enemy].left}px;
+        top:${enemies[enemy].top}px'></div>`;
        }
     }
 
     function moveEnemies() {
       for (var enemy = 0; enemy < enemies.length; enemy++){
-        enemies[enemy].top = enemies[enemy].top + 5;
+        enemies[enemy].top = enemies[enemy].top + 1;
+      }
+    }
+
+    //two for loops to detect and collide on action
+    function collisionDetection() {
+        for (var enemy = 0; enemy < enemies.length; enemy++){
+          for (var missile = 0; missile < missiles.length; missile++){
+            //console.log("missiles[missile].top",missiles[missile].top);
+            //console.log("enemies[enemy].top", enemies[enemy].top);
+          if (
+              missiles[missile].top <= (enemies[enemy].top + 50) &&
+              missiles[missile].top >= enemies[enemy].top &&
+              missiles[missile].left >= enemies[enemy].left &&
+              missiles[missile].left <= (enemies[enemy].left + 50)
+          )  {
+              //console.log("HIT!");
+              enemies.splice(enemy, 1);
+              missiles.splice(missile, 1);
+          }
+        }
       }
     }
 
@@ -118,11 +140,12 @@
         setTimeout(gameLoop , 100)
         moveMissiles(); //move missiles every 1 second (1000)
         shootMissiles();
+        moveEnemies();
         drawEnemies();
+        collisionDetection();
     }
-    gameLoop();
+    gameLoop()
 
   </script>
-
 </body>
 </html>
